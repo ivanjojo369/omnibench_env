@@ -25,6 +25,14 @@ app = FastAPI(title="omnibench_env")
 _env = OmnibenchEnvironment()
 _lock = threading.Lock()
 
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+
+app = FastAPI()
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse(url="/docs")
 
 class ResetRequest(BaseModel):
     seed: Optional[int] = None
