@@ -1,45 +1,60 @@
 """
-FastAPI server (stateful HTTP) for Omnibench.
+FastAPI server (stateful HTTP) for OmniBench / OpenEnv.
 
-- POST /reset  -> crea/reusa episode_id, hace reset, Set-Cookie episode_id, devuelve episode_id
-- POST /step   -> usa episode_id (query/cookie/body) y ejecuta step
-- GET  /state  -> devuelve state del episodio
-- GET  /schema -> JSON schemas (action/observation/state)
+Endpoints:
+- GET  /health  -> health check
+- GET  /schema  -> JSON schemas (action/observation/state)
+- POST /reset   -> crea/reusa episode_id, hace reset, Set-Cookie episode_id
+- POST /step    -> ejecuta step usando episode_id (query/cookie/body/metadata)
+- GET  /state   -> devuelve estado del episodio
+- GET  /        -> redirect a /docs (para HF Spaces)
 """
 
 from __future__ import annotations
 
-from typing import Any, Optional
-
-from uuid import uuid4
+import os
 import threading
+from typing import Any, Optional
+from uuid import uuid4
 
-from fastapi import FastAPI, Response, HTTPException, Cookie, Query, Body
+import uvicorn
+from fastapi import Body, Cookie, FastAPI, HTTPException, Query, Response
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, model_validator
 
 from omnibench_env.models import OmnibenchAction, OmnibenchObservation, OmnibenchState
 from .omnibench_env_environment import OmnibenchEnvironment
 
-app = FastAPI(title="omnibench_env")
+# ---------------------------------------------------------------------
+# App
+# ---------------------------------------------------------------------
+
+app = FastAPI(
+    title="omnibench_env",
+    version="0.1.1",
+    description="Stateful HTTP environment server for OmniBench (OpenEnv).",
+)
 
 _env = OmnibenchEnvironment()
 _lock = threading.Lock()
 
-from fastapi import FastAPI
-from fastapi.responses import RedirectResponse
-
-app = FastAPI()
 
 @app.get("/", include_in_schema=False)
 def root():
+    # HF Spaces “App” view: mejor mandar a /docs
     return RedirectResponse(url="/docs")
+
+
+# ---------------------------------------------------------------------
+# Models
+# ---------------------------------------------------------------------
 
 class ResetRequest(BaseModel):
     seed: Optional[int] = None
     domain_id: Optional[str] = None
     episode_id: Optional[str] = None
 
-    # Acepta {"domain": "..."} pero NO lo expone en el schema (docs)
+    # Acepta campos extra (p.ej. {"domain": "..."}) sin exponerlos como canonical.
     model_config = {"extra": "allow"}
 
     @model_validator(mode="before")
@@ -52,32 +67,20 @@ class ResetRequest(BaseModel):
 
 
 class StepRequest(BaseModel):
-    """
-    Canonical (documentado):
-      {
-        "episode_id": "...",
-        "action": { "mode": "tool|respond", ... }
-      }
-
-    Legacy (aceptado pero NO documentado):
-      {
-        "episode_id": "...",
-        "mode": "tool|respond",
-        "tool_name": "...",
-        "tool_args": {...},
-        "message": "...",
-        "metadata": {...}
-      }
-    """
+    # Canonical: {"episode_id": "...", "action": {...}}
     action: OmnibenchAction
     episode_id: Optional[str] = None
 
-    # permite campos extra (mode/tool_name/...) sin mostrarlos en docs
+    # Permite legacy fields sin hacerlos parte del schema público
     model_config = {"extra": "allow"}
 
     @model_validator(mode="before")
     @classmethod
     def _coerce_legacy(cls, data: Any):
+        """
+        Acepta payload legacy sin documentarlo en OpenAPI.
+        Si viene sin "action", lo envuelve como action={mode, tool_name, tool_args, message, metadata}.
+        """
         if isinstance(data, dict) and "action" not in data:
             data = {
                 "episode_id": data.get("episode_id"),
@@ -88,10 +91,19 @@ class StepRequest(BaseModel):
                     "message": data.get("message"),
                     "metadata": data.get("metadata") or {},
                 },
-                **{k: v for k, v in data.items() if k not in {"mode", "tool_name", "tool_args", "message", "metadata"}},
+                # conserva otros extras, sin duplicar los legacy keys ya “absorbidos”
+                **{
+                    k: v
+                    for k, v in data.items()
+                    if k not in {"mode", "tool_name", "tool_args", "message", "metadata"}
+                },
             }
         return data
 
+
+# ---------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------
 
 def _split_obs(obs: OmnibenchObservation) -> tuple[dict[str, Any], float, bool]:
     d = obs.model_dump()
@@ -109,21 +121,23 @@ def _resolve_episode_id(
     episode_id_q: str | None,
     episode_id_cookie: str | None,
 ) -> str | None:
-    if episode_id_q:
+    # 1) query param
+    if episode_id_q and episode_id_q.strip():
         return episode_id_q.strip()
 
+    # 2) body.episode_id
     v = getattr(body, "episode_id", None)
     if isinstance(v, str) and v.strip():
         return v.strip()
 
-    # Para StepRequest: también permitir episode_id dentro de action.metadata
+    # 3) StepRequest: permitir episode_id dentro de action.metadata (robustez)
     if isinstance(body, StepRequest) and body.action and isinstance(body.action.metadata, dict):
         for k in ("episode_id", "session_id"):
             vv = body.action.metadata.get(k)
             if isinstance(vv, str) and vv.strip():
                 return vv.strip()
 
-    # Extra fields (legacy) si alguien manda metadata plano
+    # 4) extra fields: si alguien manda metadata plano (legacy)
     extra = getattr(body, "__pydantic_extra__", None) or {}
     meta = extra.get("metadata")
     if isinstance(meta, dict):
@@ -132,15 +146,20 @@ def _resolve_episode_id(
             if isinstance(vv, str) and vv.strip():
                 return vv.strip()
 
+    # 5) cookie
     if episode_id_cookie and episode_id_cookie.strip():
         return episode_id_cookie.strip()
 
     return None
 
 
+# ---------------------------------------------------------------------
+# Routes
+# ---------------------------------------------------------------------
+
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {"status": "ok", "service": "omnibench_env"}
 
 
 @app.get("/schema")
@@ -183,7 +202,7 @@ def step(
 
     action = body.action
 
-    # asegurar que el eid quede amarrado también en metadata (por robustez)
+    # Amarrar eid también dentro de metadata (robustez)
     action.metadata = action.metadata or {}
     action.metadata["episode_id"] = eid
 
@@ -216,15 +235,15 @@ def state(
     return st.model_dump()
 
 
-# --- Entry point para openenv validate / uv run ---
-
-import os
-import uvicorn
+# ---------------------------------------------------------------------
+# Entry point (openenv validate / uv run / HF Spaces)
+# ---------------------------------------------------------------------
 
 def main() -> None:
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "8000"))
     uvicorn.run(app, host=host, port=port, reload=False)
+
 
 if __name__ == "__main__":
     main()
