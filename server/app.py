@@ -29,11 +29,17 @@ from .omnibench_env_environment import OmnibenchEnvironment
 # App
 # ---------------------------------------------------------------------
 
+from fastapi.responses import RedirectResponse
+
 app = FastAPI(
     title="omnibench_env",
     version="0.1.1",
     description="Stateful HTTP environment server for OmniBench (OpenEnv).",
 )
+
+@app.get("/", include_in_schema=False)
+def root():
+    return RedirectResponse("/docs")
 
 _env = OmnibenchEnvironment()
 _lock = threading.Lock()
@@ -247,4 +253,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-    
