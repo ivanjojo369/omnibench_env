@@ -1,0 +1,149 @@
+{
+  "domain": "healthcare",
+  "reset_payload": {
+    "domain": "healthcare"
+  },
+  "reset_out": {
+    "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+    "observation": {
+      "metadata": {
+        "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+        "step_count": 0,
+        "domain_id": "healthcare",
+        "task_id": "health_triage_v1",
+        "tool_trace_len": 0,
+        "task_seed": 1654615998
+      },
+      "domain": "healthcare",
+      "task_id": "health_triage_v1",
+      "instruction": "Regla sintética:\n- Si temp>=39 o sat<=92 => HIGH\n- Si temp>=38 o sat<=94 => MED\n- Si no => LOW\n\nPaciente: temp=38.5, sat=95\nResponde SOLO: LOW/MED/HIGH.",
+      "available_tools": [
+        {
+          "name": "health.apply_rule",
+          "description": "Aplica la regla sintética a (temp, sat) y devuelve LOW/MED/HIGH.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "temp": {
+                "type": "number"
+              },
+              "sat": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "temp",
+              "sat"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": null
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "tool_action": {
+    "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+    "action": {
+      "mode": "tool",
+      "tool_name": "REPLACE_ME",
+      "tool_args": {}
+    }
+  },
+  "tool_out": {
+    "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+    "observation": {
+      "metadata": {
+        "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+        "step_count": 1,
+        "domain_id": "healthcare",
+        "task_id": "health_triage_v1",
+        "tool_trace_len": 1,
+        "last_mode": "tool"
+      },
+      "domain": "healthcare",
+      "task_id": "health_triage_v1",
+      "instruction": "Regla sintética:\n- Si temp>=39 o sat<=92 => HIGH\n- Si temp>=38 o sat<=94 => MED\n- Si no => LOW\n\nPaciente: temp=38.5, sat=95\nResponde SOLO: LOW/MED/HIGH.",
+      "available_tools": [
+        {
+          "name": "health.apply_rule",
+          "description": "Aplica la regla sintética a (temp, sat) y devuelve LOW/MED/HIGH.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "temp": {
+                "type": "number"
+              },
+              "sat": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "temp",
+              "sat"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "ok": false,
+        "error": "unknown_tool",
+        "tool_name": "REPLACE_ME"
+      }
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "respond_action": {
+    "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+    "action": {
+      "mode": "respond",
+      "message": "REPLACE_ME"
+    }
+  },
+  "respond_out": {
+    "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+    "observation": {
+      "metadata": {
+        "episode_id": "cc5e3257-ebcb-4484-8a8c-ff33df4c66ba",
+        "step_count": 2,
+        "domain_id": "healthcare",
+        "task_id": "health_triage_v1",
+        "tool_trace_len": 2,
+        "last_mode": "respond"
+      },
+      "domain": "healthcare",
+      "task_id": "health_triage_v1",
+      "instruction": "Regla sintética:\n- Si temp>=39 o sat<=92 => HIGH\n- Si temp>=38 o sat<=94 => MED\n- Si no => LOW\n\nPaciente: temp=38.5, sat=95\nResponde SOLO: LOW/MED/HIGH.",
+      "available_tools": [
+        {
+          "name": "health.apply_rule",
+          "description": "Aplica la regla sintética a (temp, sat) y devuelve LOW/MED/HIGH.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "temp": {
+                "type": "number"
+              },
+              "sat": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "temp",
+              "sat"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "task_id": "health_triage_v1",
+        "expected": "MED",
+        "got": "REPLACE_ME"
+      }
+    },
+    "reward": 0.0,
+    "done": true
+  }
+}

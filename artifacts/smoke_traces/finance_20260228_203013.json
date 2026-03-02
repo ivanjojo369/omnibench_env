@@ -1,0 +1,210 @@
+{
+  "domain": "finance",
+  "reset_raw": {
+    "episode_id": "b692fc85-c726-40de-a429-c61b8c468495",
+    "observation": {
+      "metadata": {
+        "episode_id": "b692fc85-c726-40de-a429-c61b8c468495",
+        "step_count": 0,
+        "domain_id": "finance",
+        "task_id": "finance_compound_interest_v1",
+        "tool_trace_len": 0,
+        "task_seed": 1654615998
+      },
+      "domain": "finance",
+      "task_id": "finance_compound_interest_v1",
+      "instruction": "Calcula el monto final con interés compuesto.\nDatos: principal=1000, tasa_anual=0.05, años=2, comp=anual (n=1).\nResponde SOLO con el número con 2 decimales.",
+      "available_tools": [
+        {
+          "name": "finance.compound",
+          "description": "Calcula M = P*(1+r/n)^(n*t). Devuelve monto final numérico.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "principal": {
+                "type": "number"
+              },
+              "rate": {
+                "type": "number"
+              },
+              "years": {
+                "type": "number"
+              },
+              "n": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "principal",
+              "rate",
+              "years",
+              "n"
+            ]
+          }
+        },
+        {
+          "name": "finance.percent_change",
+          "description": "Calcula el cambio porcentual de old a new: (new-old)/old*100.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "old": {
+                "type": "number"
+              },
+              "new": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "old",
+              "new"
+            ]
+          }
+        },
+        {
+          "name": "finance.compare",
+          "description": "Compara dos opciones por retorno neto (return-invest). Devuelve la mejor etiqueta.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "invest": {
+                      "type": "number"
+                    },
+                    "ret": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "invest",
+                    "ret"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "options"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": null
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "respond_raw": {
+    "episode_id": "b692fc85-c726-40de-a429-c61b8c468495",
+    "observation": {
+      "metadata": {
+        "episode_id": "b692fc85-c726-40de-a429-c61b8c468495",
+        "step_count": 1,
+        "domain_id": "finance",
+        "task_id": "finance_compound_interest_v1",
+        "tool_trace_len": 1,
+        "last_mode": "respond"
+      },
+      "domain": "finance",
+      "task_id": "finance_compound_interest_v1",
+      "instruction": "Calcula el monto final con interés compuesto.\nDatos: principal=1000, tasa_anual=0.05, años=2, comp=anual (n=1).\nResponde SOLO con el número con 2 decimales.",
+      "available_tools": [
+        {
+          "name": "finance.compound",
+          "description": "Calcula M = P*(1+r/n)^(n*t). Devuelve monto final numérico.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "principal": {
+                "type": "number"
+              },
+              "rate": {
+                "type": "number"
+              },
+              "years": {
+                "type": "number"
+              },
+              "n": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "principal",
+              "rate",
+              "years",
+              "n"
+            ]
+          }
+        },
+        {
+          "name": "finance.percent_change",
+          "description": "Calcula el cambio porcentual de old a new: (new-old)/old*100.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "old": {
+                "type": "number"
+              },
+              "new": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "old",
+              "new"
+            ]
+          }
+        },
+        {
+          "name": "finance.compare",
+          "description": "Compara dos opciones por retorno neto (return-invest). Devuelve la mejor etiqueta.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "label": {
+                      "type": "string"
+                    },
+                    "invest": {
+                      "type": "number"
+                    },
+                    "ret": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "label",
+                    "invest",
+                    "ret"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "options"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "task_id": "finance_compound_interest_v1",
+        "expected": "1102.50",
+        "got": "1102.50",
+        "raw": "1102.50"
+      }
+    },
+    "reward": 1.0,
+    "done": true
+  }
+}

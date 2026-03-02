@@ -1,0 +1,252 @@
+{
+  "domain": "research",
+  "reset_payload": {
+    "domain": "research"
+  },
+  "reset_out": {
+    "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+    "observation": {
+      "metadata": {
+        "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+        "step_count": 0,
+        "domain_id": "research",
+        "task_id": "research_find_metric_omnibench_v1",
+        "tool_trace_len": 0,
+        "task_seed": 1654615998
+      },
+      "domain": "research",
+      "task_id": "research_find_metric_omnibench_v1",
+      "instruction": "Usa research.search y research.open para encontrar cuál es el 'Key metric' de OmniBench. Responde SOLO con el nombre exacto.",
+      "available_tools": [
+        {
+          "name": "research.search",
+          "description": "Busca documentos por palabra clave (case-insensitive). Devuelve una lista de doc_ids.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "Texto a buscar"
+              }
+            },
+            "required": [
+              "query"
+            ]
+          }
+        },
+        {
+          "name": "research.open",
+          "description": "Abre un documento por doc_id y devuelve su texto completo.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "doc_id": {
+                "type": "string",
+                "description": "ID del documento (ej. R1)"
+              }
+            },
+            "required": [
+              "doc_id"
+            ]
+          }
+        },
+        {
+          "name": "research.extract",
+          "description": "Extrae usando regex (devuelve primer grupo capturado si existe).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regex con (grupo) capturable"
+              },
+              "text": {
+                "type": "string",
+                "description": "Texto donde buscar"
+              }
+            },
+            "required": [
+              "pattern",
+              "text"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": null
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "tool_action": {
+    "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+    "action": {
+      "mode": "tool",
+      "tool_name": "REPLACE_ME",
+      "tool_args": {}
+    }
+  },
+  "tool_out": {
+    "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+    "observation": {
+      "metadata": {
+        "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+        "step_count": 1,
+        "domain_id": "research",
+        "task_id": "research_find_metric_omnibench_v1",
+        "tool_trace_len": 1,
+        "last_mode": "tool"
+      },
+      "domain": "research",
+      "task_id": "research_find_metric_omnibench_v1",
+      "instruction": "Usa research.search y research.open para encontrar cuál es el 'Key metric' de OmniBench. Responde SOLO con el nombre exacto.",
+      "available_tools": [
+        {
+          "name": "research.search",
+          "description": "Busca documentos por palabra clave (case-insensitive). Devuelve una lista de doc_ids.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "Texto a buscar"
+              }
+            },
+            "required": [
+              "query"
+            ]
+          }
+        },
+        {
+          "name": "research.open",
+          "description": "Abre un documento por doc_id y devuelve su texto completo.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "doc_id": {
+                "type": "string",
+                "description": "ID del documento (ej. R1)"
+              }
+            },
+            "required": [
+              "doc_id"
+            ]
+          }
+        },
+        {
+          "name": "research.extract",
+          "description": "Extrae usando regex (devuelve primer grupo capturado si existe).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regex con (grupo) capturable"
+              },
+              "text": {
+                "type": "string",
+                "description": "Texto donde buscar"
+              }
+            },
+            "required": [
+              "pattern",
+              "text"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "ok": false,
+        "error": "unknown_tool",
+        "tool_name": "REPLACE_ME"
+      }
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "respond_action": {
+    "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+    "action": {
+      "mode": "respond",
+      "message": "REPLACE_ME"
+    }
+  },
+  "respond_out": {
+    "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+    "observation": {
+      "metadata": {
+        "episode_id": "5ef6d93f-bc36-4cec-9341-8d43c74337bd",
+        "step_count": 2,
+        "domain_id": "research",
+        "task_id": "research_find_metric_omnibench_v1",
+        "tool_trace_len": 2,
+        "last_mode": "respond"
+      },
+      "domain": "research",
+      "task_id": "research_find_metric_omnibench_v1",
+      "instruction": "Usa research.search y research.open para encontrar cuál es el 'Key metric' de OmniBench. Responde SOLO con el nombre exacto.",
+      "available_tools": [
+        {
+          "name": "research.search",
+          "description": "Busca documentos por palabra clave (case-insensitive). Devuelve una lista de doc_ids.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "description": "Texto a buscar"
+              }
+            },
+            "required": [
+              "query"
+            ]
+          }
+        },
+        {
+          "name": "research.open",
+          "description": "Abre un documento por doc_id y devuelve su texto completo.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "doc_id": {
+                "type": "string",
+                "description": "ID del documento (ej. R1)"
+              }
+            },
+            "required": [
+              "doc_id"
+            ]
+          }
+        },
+        {
+          "name": "research.extract",
+          "description": "Extrae usando regex (devuelve primer grupo capturado si existe).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regex con (grupo) capturable"
+              },
+              "text": {
+                "type": "string",
+                "description": "Texto donde buscar"
+              }
+            },
+            "required": [
+              "pattern",
+              "text"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "task_id": "research_find_metric_omnibench_v1",
+        "expected": "OB-Score",
+        "got": "REPLACE_ME",
+        "raw": "REPLACE_ME"
+      }
+    },
+    "reward": 0.0,
+    "done": true
+  }
+}

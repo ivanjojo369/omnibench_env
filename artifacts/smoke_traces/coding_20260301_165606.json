@@ -1,0 +1,110 @@
+{
+  "domain": "coding",
+  "reset_raw": {
+    "episode_id": "f6ec869b-b5c5-4a04-b1d1-62c674dfa330",
+    "observation": {
+      "metadata": {
+        "episode_id": "f6ec869b-b5c5-4a04-b1d1-62c674dfa330",
+        "step_count": 0,
+        "domain_id": "coding",
+        "task_id": "coding_fix_multiply_v1",
+        "tool_trace_len": 0,
+        "task_seed": 1654615998
+      },
+      "domain": "coding",
+      "task_id": "coding_fix_multiply_v1",
+      "instruction": "Abre el archivo math_utils.py. Encuentra el bug en multiply(a,b).\nTu respuesta final debe ser SOLO la expresión correcta del return para multiply.\nEjemplo de formato: a * b",
+      "available_tools": [
+        {
+          "name": "coding.open_file",
+          "description": "Abre un archivo offline y devuelve su contenido.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        },
+        {
+          "name": "coding.eval_int",
+          "description": "Evalúa una expresión aritmética entera segura (solo //, +, -, *, paréntesis, enteros).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "expr": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "expr"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": null
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "respond_message": "a * b",
+  "respond_raw": {
+    "episode_id": "f6ec869b-b5c5-4a04-b1d1-62c674dfa330",
+    "observation": {
+      "metadata": {
+        "episode_id": "f6ec869b-b5c5-4a04-b1d1-62c674dfa330",
+        "step_count": 1,
+        "domain_id": "coding",
+        "task_id": "coding_fix_multiply_v1",
+        "tool_trace_len": 1,
+        "last_mode": "respond"
+      },
+      "domain": "coding",
+      "task_id": "coding_fix_multiply_v1",
+      "instruction": "Abre el archivo math_utils.py. Encuentra el bug en multiply(a,b).\nTu respuesta final debe ser SOLO la expresión correcta del return para multiply.\nEjemplo de formato: a * b",
+      "available_tools": [
+        {
+          "name": "coding.open_file",
+          "description": "Abre un archivo offline y devuelve su contenido.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        },
+        {
+          "name": "coding.eval_int",
+          "description": "Evalúa una expresión aritmética entera segura (solo //, +, -, *, paréntesis, enteros).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "expr": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "expr"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "task_id": "coding_fix_multiply_v1",
+        "expected": "a * b",
+        "got": "a * b"
+      }
+    },
+    "reward": 1.0,
+    "done": true
+  }
+}

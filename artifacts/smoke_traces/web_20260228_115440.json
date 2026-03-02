@@ -1,0 +1,204 @@
+{
+  "domain": "web",
+  "reset_payload": {
+    "domain": "web"
+  },
+  "reset_out": {
+    "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+    "observation": {
+      "metadata": {
+        "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+        "step_count": 0,
+        "domain_id": "web",
+        "task_id": "web_find_support_code_v1",
+        "tool_trace_len": 0,
+        "task_seed": 1654615998
+      },
+      "domain": "web",
+      "task_id": "web_find_support_code_v1",
+      "instruction": "Usa herramientas web.* para encontrar el 'Support code' en la página /contact. Responde SOLO con el código exacto (ej. W-0000).",
+      "available_tools": [
+        {
+          "name": "web.get",
+          "description": "Obtiene HTML desde una ruta offline (por ejemplo: /, /contact, /about, /pricing).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Ruta a solicitar (ej. /contact)"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        },
+        {
+          "name": "web.extract",
+          "description": "Extrae texto usando regex. Útil para sacar 'Support code', 'Version', precios, etc.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regex con (grupo) capturable"
+              },
+              "text": {
+                "type": "string",
+                "description": "Texto/HTML donde buscar"
+              }
+            },
+            "required": [
+              "pattern",
+              "text"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": null
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "tool_action": {
+    "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+    "action": {
+      "mode": "tool",
+      "tool_name": "REPLACE_ME",
+      "tool_args": {}
+    }
+  },
+  "tool_out": {
+    "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+    "observation": {
+      "metadata": {
+        "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+        "step_count": 1,
+        "domain_id": "web",
+        "task_id": "web_find_support_code_v1",
+        "tool_trace_len": 1,
+        "last_mode": "tool"
+      },
+      "domain": "web",
+      "task_id": "web_find_support_code_v1",
+      "instruction": "Usa herramientas web.* para encontrar el 'Support code' en la página /contact. Responde SOLO con el código exacto (ej. W-0000).",
+      "available_tools": [
+        {
+          "name": "web.get",
+          "description": "Obtiene HTML desde una ruta offline (por ejemplo: /, /contact, /about, /pricing).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Ruta a solicitar (ej. /contact)"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        },
+        {
+          "name": "web.extract",
+          "description": "Extrae texto usando regex. Útil para sacar 'Support code', 'Version', precios, etc.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regex con (grupo) capturable"
+              },
+              "text": {
+                "type": "string",
+                "description": "Texto/HTML donde buscar"
+              }
+            },
+            "required": [
+              "pattern",
+              "text"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "ok": false,
+        "error": "unknown_tool",
+        "tool_name": "REPLACE_ME"
+      }
+    },
+    "reward": 0.0,
+    "done": false
+  },
+  "respond_action": {
+    "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+    "action": {
+      "mode": "respond",
+      "message": "REPLACE_ME"
+    }
+  },
+  "respond_out": {
+    "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+    "observation": {
+      "metadata": {
+        "episode_id": "f64811a7-b678-4543-a2ca-0121c4f9fdf3",
+        "step_count": 2,
+        "domain_id": "web",
+        "task_id": "web_find_support_code_v1",
+        "tool_trace_len": 2,
+        "last_mode": "respond"
+      },
+      "domain": "web",
+      "task_id": "web_find_support_code_v1",
+      "instruction": "Usa herramientas web.* para encontrar el 'Support code' en la página /contact. Responde SOLO con el código exacto (ej. W-0000).",
+      "available_tools": [
+        {
+          "name": "web.get",
+          "description": "Obtiene HTML desde una ruta offline (por ejemplo: /, /contact, /about, /pricing).",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Ruta a solicitar (ej. /contact)"
+              }
+            },
+            "required": [
+              "path"
+            ]
+          }
+        },
+        {
+          "name": "web.extract",
+          "description": "Extrae texto usando regex. Útil para sacar 'Support code', 'Version', precios, etc.",
+          "args_schema": {
+            "type": "object",
+            "properties": {
+              "pattern": {
+                "type": "string",
+                "description": "Regex con (grupo) capturable"
+              },
+              "text": {
+                "type": "string",
+                "description": "Texto/HTML donde buscar"
+              }
+            },
+            "required": [
+              "pattern",
+              "text"
+            ]
+          }
+        }
+      ],
+      "last_tool_result": {
+        "task_id": "web_find_support_code_v1",
+        "expected": "W-7319",
+        "got": "REPLACE_ME",
+        "raw": "REPLACE_ME"
+      }
+    },
+    "reward": 0.0,
+    "done": true
+  }
+}

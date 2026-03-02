@@ -1,0 +1,42 @@
+{
+  "DEFAULT": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  },
+  "finance": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  },
+  "agent_safety": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  },
+  "healthcare": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  },
+  "web": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  },
+  "research": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  },
+  "coding": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  },
+  "computer_use": {
+    "tool_name": "REPLACE_ME",
+    "tool_args": {},
+    "respond_message": "REPLACE_ME"
+  }
+}

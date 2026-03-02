@@ -1,0 +1,1 @@
+{"action":{"mode":"tool","tool_name":"finance.compound","tool_args":{"principal":1000,"rate":0.05,"years":2,"n":1}}}
