@@ -4,10 +4,11 @@ FastAPI server (stateful HTTP) for OmniBench / OpenEnv.
 Endpoints:
 - GET  /health  -> health check
 - GET  /schema  -> JSON schemas (action/observation/state)
-- POST /reset   -> crea/reusa episode_id, hace reset, Set-Cookie episode_id
-- POST /step    -> ejecuta step usando episode_id (query/cookie/body/metadata)
-- GET  /state   -> devuelve estado del episodio
-- GET  /        -> redirect a /docs (para HF Spaces)
+- POST /reset   -> creates/reuses episode_id, sets cookie, returns observation
+- POST /step    -> steps using episode_id (query/cookie/body/metadata)
+- GET  /state   -> returns episode state
+- GET  /        -> redirect to /docs (HF Spaces)
+- GET  /web     -> redirect to /docs (HF Spaces base_path)
 """
 
 from __future__ import annotations
@@ -29,17 +30,11 @@ from .omnibench_env_environment import OmnibenchEnvironment
 # App
 # ---------------------------------------------------------------------
 
-from fastapi.responses import RedirectResponse
-
 app = FastAPI(
     title="omnibench_env",
     version="0.1.1",
     description="Stateful HTTP environment server for OmniBench (OpenEnv).",
 )
-
-@app.get("/", include_in_schema=False)
-def root():
-    return RedirectResponse("/docs")
 
 _env = OmnibenchEnvironment()
 _lock = threading.Lock()
@@ -47,7 +42,12 @@ _lock = threading.Lock()
 
 @app.get("/", include_in_schema=False)
 def root():
-    # HF Spaces “App” view: mejor mandar a /docs
+    return RedirectResponse(url="/docs")
+
+
+@app.get("/web", include_in_schema=False)
+def web_root():
+    # HF Spaces a veces embebe el “App” bajo /web
     return RedirectResponse(url="/docs")
 
 
@@ -60,33 +60,31 @@ class ResetRequest(BaseModel):
     domain_id: Optional[str] = None
     episode_id: Optional[str] = None
 
-    # Acepta campos extra (p.ej. {"domain": "..."}) sin exponerlos como canonical.
+    # Acepta {"domain": "..."} pero no lo expone como campo canonical
     model_config = {"extra": "allow"}
 
     @model_validator(mode="before")
     @classmethod
     def _coerce_domain(cls, data: Any):
-        if isinstance(data, dict):
-            if not data.get("domain_id") and data.get("domain"):
-                data = {**data, "domain_id": data.get("domain")}
+        if isinstance(data, dict) and not data.get("domain_id") and data.get("domain"):
+            data = {**data, "domain_id": data.get("domain")}
         return data
 
 
 class StepRequest(BaseModel):
-    # Canonical: {"episode_id": "...", "action": {...}}
+    # Canonical:
+    #   {"episode_id":"...", "action": {...}}
+    #
+    # Legacy (aceptado):
+    #   {"episode_id":"...", "mode":"tool|respond", "tool_name":"...", "tool_args":{...}, "message":"...", "metadata":{...}}
     action: OmnibenchAction
     episode_id: Optional[str] = None
 
-    # Permite legacy fields sin hacerlos parte del schema público
     model_config = {"extra": "allow"}
 
     @model_validator(mode="before")
     @classmethod
     def _coerce_legacy(cls, data: Any):
-        """
-        Acepta payload legacy sin documentarlo en OpenAPI.
-        Si viene sin "action", lo envuelve como action={mode, tool_name, tool_args, message, metadata}.
-        """
         if isinstance(data, dict) and "action" not in data:
             data = {
                 "episode_id": data.get("episode_id"),
@@ -97,12 +95,7 @@ class StepRequest(BaseModel):
                     "message": data.get("message"),
                     "metadata": data.get("metadata") or {},
                 },
-                # conserva otros extras, sin duplicar los legacy keys ya “absorbidos”
-                **{
-                    k: v
-                    for k, v in data.items()
-                    if k not in {"mode", "tool_name", "tool_args", "message", "metadata"}
-                },
+                **{k: v for k, v in data.items() if k not in {"mode", "tool_name", "tool_args", "message", "metadata"}},
             }
         return data
 
@@ -127,23 +120,23 @@ def _resolve_episode_id(
     episode_id_q: str | None,
     episode_id_cookie: str | None,
 ) -> str | None:
-    # 1) query param
+    # 1) query
     if episode_id_q and episode_id_q.strip():
         return episode_id_q.strip()
 
-    # 2) body.episode_id
+    # 2) body
     v = getattr(body, "episode_id", None)
     if isinstance(v, str) and v.strip():
         return v.strip()
 
-    # 3) StepRequest: permitir episode_id dentro de action.metadata (robustez)
+    # 3) StepRequest: permitir episode_id dentro de action.metadata
     if isinstance(body, StepRequest) and body.action and isinstance(body.action.metadata, dict):
         for k in ("episode_id", "session_id"):
             vv = body.action.metadata.get(k)
             if isinstance(vv, str) and vv.strip():
                 return vv.strip()
 
-    # 4) extra fields: si alguien manda metadata plano (legacy)
+    # 4) legacy extra fields: metadata plano
     extra = getattr(body, "__pydantic_extra__", None) or {}
     meta = extra.get("metadata")
     if isinstance(meta, dict):
@@ -207,8 +200,6 @@ def step(
         raise HTTPException(400, "Missing episode_id. Call /reset first (cookie) or pass ?episode_id=...")
 
     action = body.action
-
-    # Amarrar eid también dentro de metadata (robustez)
     action.metadata = action.metadata or {}
     action.metadata["episode_id"] = eid
 
@@ -242,7 +233,7 @@ def state(
 
 
 # ---------------------------------------------------------------------
-# Entry point (openenv validate / uv run / HF Spaces)
+# Entry point
 # ---------------------------------------------------------------------
 
 def main() -> None:
@@ -253,3 +244,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+    
